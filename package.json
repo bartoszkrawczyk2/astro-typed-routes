@@ -13,7 +13,7 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --import tsx --test src/*.test.ts",
     "build": "rm -rf dist && tsc && tsup src/index.ts src/middleware.ts --dts --format esm",
     "prepublishOnly": "npm run build"
   },
@@ -30,10 +30,10 @@
     "@types/node": "^20.13.0",
     "astro": "^4.9.2",
     "tsup": "^8.0.2",
+    "tsx": "^4.13.1",
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
     "astro": "^4.0.0"
-  },
-  "dependencies": {}
+  }
 }

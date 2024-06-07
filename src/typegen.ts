@@ -1,15 +1,8 @@
+import type { Dirent } from "node:fs";
 import { readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export async function typegen(root: string) {
-  const pagesDir = join(root, "src/pages");
-  const routesTypesPath = join(root, ".astro/routes.d.ts");
-
-  const pages = await readdir(pagesDir, {
-    recursive: true,
-    withFileTypes: true,
-  });
-
+export function generateTypeString(pagesDir: string, pages: Dirent[]) {
   const routes = pages
     .filter((page) => page.isFile())
     .map((page) => {
@@ -39,6 +32,20 @@ export async function typegen(root: string) {
     )
     .filter(Boolean)
     .join(" |\n")};`;
+
+  return type;
+}
+
+export async function typegen(root: string) {
+  const pagesDir = join(root, "src/pages");
+  const routesTypesPath = join(root, ".astro/routes.d.ts");
+
+  const pages = await readdir(pagesDir, {
+    recursive: true,
+    withFileTypes: true,
+  });
+
+  const type = generateTypeString(pagesDir, pages);
 
   await writeFile(routesTypesPath, type, "utf-8");
 }
